@@ -459,7 +459,7 @@ Then set `VITE_CONTRACT_ADDRESS=<your address>` in the Vercel project settings.
 - [x] **Idea from the provided list** — Private Voting (proposal above)
 - [x] **Minimum 10 meaningful commits** — see `git log`
 - [x] **Complete README** with privacy model and product proposal
-- [x] **Live demo link** — https://GhostVote-web-lx3j-iota.vercel.app
+- [x] **Live demo link** — https://midnight3-web.vercel.app/
 - [x] **Deployed contract** — `240c09da2cb5a03df2154c2ecf873331480f367789842d886c7c739f0eaf5d3f`
 
 ---
