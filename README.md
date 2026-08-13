@@ -22,10 +22,10 @@ anonymous ballots with publicly verifiable tallies.
 
 | | |
 |---|---|
-| **Live Demo** | https://GhostVote-web-lx3j-iota.vercel.app |
+| **Live Demo** | https://midnight3-web.vercel.app/ |
 | **Deployed Contract Address** | `240c09da2cb5a03df2154c2ecf873331480f367789842d886c7c739f0eaf5d3f` |
 | **Network** | Midnight Preview / Preprod |
-| **CI** | [GitHub Actions](https://github.com/Anuoluwapo25/GhostVote/actions/workflows/ci.yml) — lint, build, 31 tests, web build on every push |
+| **CI** | [GitHub Actions](https://github.com/krit-k7/Midnight3/actions/workflows/ci.yml) — lint, build, 31 tests, web build on every push |
 
 > To pre-fill the canonical poll address, set `VITE_CONTRACT_ADDRESS=<address>`
 > in the Vercel project settings and redeploy. The frontend reads it via
