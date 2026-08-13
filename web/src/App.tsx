@@ -6,14 +6,18 @@
 // public tally move. The privacy panel makes the central claim observable: the
 // tally changes, but nothing on-chain links the new vote to the connected
 // wallet, and a second ballot from the same voter is rejected by proof alone.
+// The terminal panel makes it audible/visible in real time, as each step
+// actually happens — it is a live log, not a decorative prop.
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useWallet } from './hooks/useWallet';
 import { castVote, deployPoll, joinPoll, readTally } from './midnight/voting';
 import type { DeployedVotingContract, VotingTally } from './midnight/contract-types';
 import { DEFAULT_CONTRACT_ADDRESS } from './config';
 
 type Busy = null | 'joining' | 'deploying' | 'voting';
+type LogKind = 'cmd' | 'muted' | 'ok' | 'warn' | 'err';
+type LogLine = { id: number; kind: LogKind; text: string };
 
 const short = (s: string, head = 10, tail = 8) =>
   s.length <= head + tail + 1 ? s : `${s.slice(0, head)}…${s.slice(-tail)}`;
@@ -26,6 +30,26 @@ export const App = () => {
   const [busy, setBusy] = useState<Busy>(null);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+
+  const [log, setLog] = useState<LogLine[]>([
+    { id: 0, kind: 'muted', text: 'waiting for wallet connection…' },
+  ]);
+  const logId = useRef(1);
+  const logBody = useRef<HTMLDivElement>(null);
+
+  const pushLog = useCallback((kind: LogKind, text: string) => {
+    setLog((prev) => [...prev.slice(-40), { id: logId.current++, kind, text }]);
+  }, []);
+
+  useEffect(() => {
+    logBody.current?.scrollTo({ top: logBody.current.scrollHeight });
+  }, [log]);
+
+  useEffect(() => {
+    if (wallet.status === 'connected' && wallet.info) {
+      pushLog('ok', `wallet connected — ${wallet.info.name} (${wallet.info.networkId})`);
+    }
+  }, [wallet.status, wallet.info, pushLog]);
 
   const activeAddress = contract?.deployTxData.public.contractAddress ?? null;
 
@@ -51,12 +75,16 @@ export const App = () => {
     setBusy('joining');
     setError(null);
     setNotice(null);
+    pushLog('cmd', `$ join_poll --address ${short(address.trim())}`);
     try {
       const joined = await joinPoll(wallet.providers, address.trim());
       setContract(joined);
       setNotice('Joined the poll. A fresh voter key was generated in this browser.');
+      pushLog('ok', 'voter key generated locally — never leaves this browser');
     } catch (e) {
-      setError(e instanceof Error ? e.message : String(e));
+      const msg = e instanceof Error ? e.message : String(e);
+      setError(msg);
+      pushLog('err', `join failed — ${msg}`);
     } finally {
       setBusy(null);
     }
@@ -67,13 +95,17 @@ export const App = () => {
     setBusy('deploying');
     setError(null);
     setNotice(null);
+    pushLog('cmd', '$ deploy_poll');
     try {
       const deployed = await deployPoll(wallet.providers);
       setContract(deployed);
       setAddress(deployed.deployTxData.public.contractAddress);
       setNotice(`New poll deployed at ${deployed.deployTxData.public.contractAddress}`);
+      pushLog('ok', `deployed at ${short(deployed.deployTxData.public.contractAddress)}`);
     } catch (e) {
-      setError(e instanceof Error ? e.message : String(e));
+      const msg = e instanceof Error ? e.message : String(e);
+      setError(msg);
+      pushLog('err', `deploy failed — ${msg}`);
     } finally {
       setBusy(null);
     }
@@ -84,8 +116,15 @@ export const App = () => {
     setBusy('voting');
     setError(null);
     setNotice(null);
+    pushLog('cmd', `$ cast_vote --choice=${choice ? 'YES' : 'NO'}`);
+    pushLog('muted', 'generating local ZK proof…');
     try {
       const { txId, blockHeight } = await castVote(contract, choice);
+      pushLog('ok', `proof verified — nullifier committed`);
+      pushLog(
+        'ok',
+        `tx ${short(txId)} confirmed in block ${blockHeight}`,
+      );
       setNotice(
         `${choice ? 'YES' : 'NO'} vote accepted in block ${blockHeight} (tx ${short(txId)}). ` +
           `Your nullifier is now spent — the chain knows a unique voter voted, not which one.`,
@@ -93,9 +132,10 @@ export const App = () => {
       await refreshTally();
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
-      // The contract's own assert surfaces here on a repeat ballot.
+      const dup = /already cast|nullifier/i.test(msg);
+      pushLog('err', dup ? 'proof rejected — nullifier already spent' : `vote failed — ${msg}`);
       setError(
-        /already cast|nullifier/i.test(msg)
+        dup
           ? 'Rejected: this voter key has already voted. The proof failed the ' +
             'uniqueness check without ever revealing who you are.'
           : msg,
@@ -113,17 +153,52 @@ export const App = () => {
 
   return (
     <div className="wrap">
+      <div className="eyebrow">
+        <span className="dot" />
+        Powered by Midnight Network · Zero-Knowledge Proofs
+      </div>
+
       <header className="masthead">
         <div>
-          <h1>🌒 GhostVote</h1>
+          <h1>
+            <span className="moon">🌒</span> GhostVote
+          </h1>
         </div>
         <WalletBar wallet={wallet} />
       </header>
+
+      <h2 className="hero-title">
+        Vote in the dark.
+        <br />
+        <span className="grad">Count in the light.</span>
+      </h2>
       <p className="tagline">
         Anonymous voting on Midnight Preprod. The tally is public and auditable; the voter is
         not. Double-voting is blocked by a zero-knowledge proof, not by a server that knows
         who you are.
       </p>
+
+      {/* ── Live proof terminal ──────────────────────────── */}
+      <div className="terminal" style={{ marginBottom: 18 }}>
+        <div className="terminal-bar">
+          <span className="tl-dot r" />
+          <span className="tl-dot y" />
+          <span className="tl-dot g" />
+          <span style={{ marginLeft: 6 }}>ghostvote · midnight-preprod</span>
+        </div>
+        <div className="terminal-body" ref={logBody}>
+          {log.map((line) => (
+            <div key={line.id} className={`terminal-line ${line.kind}`}>
+              {line.kind === 'cmd' ? <span className="prompt">$</span> : <span className="prompt">›</span>}
+              <span>{line.text}</span>
+            </div>
+          ))}
+          <div className="terminal-line">
+            <span className="prompt">$</span>
+            <span className="terminal-cursor" />
+          </div>
+        </div>
+      </div>
 
       {/* ── Poll ─────────────────────────────────────────── */}
       <section className="card">
@@ -144,7 +219,7 @@ export const App = () => {
               <button onClick={handleJoin} disabled={busy !== null || !address.trim()}>
                 {busy === 'joining' ? 'Joining…' : 'Join'}
               </button>
-              <button onClick={handleDeploy} disabled={busy !== null}>
+              <button className="primary" onClick={handleDeploy} disabled={busy !== null}>
                 {busy === 'deploying' ? 'Deploying…' : 'Deploy new'}
               </button>
             </div>
