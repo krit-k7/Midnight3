@@ -1,6 +1,6 @@
-# 🌓 Ballot — Anonymous Voting on Midnight
+# 🌓 GhostVote — Vote privately, reveal nothing
 
-[![CI](https://github.com/Anuoluwapo25/shadowballot/actions/workflows/ci.yml/badge.svg)](https://github.com/Anuoluwapo25/shadowballot/actions/workflows/ci.yml)
+[![CI](https://github.com/krit-k7/Midnight3/actions/workflows/ci.yml/badge.svg)](https://github.com/krit-k7/Midnight3/actions/workflows/ci.yml)
 [![Tests](https://img.shields.io/badge/tests-31%20passing-brightgreen)](#-testing)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](#-license)
 
@@ -22,10 +22,10 @@ anonymous ballots with publicly verifiable tallies.
 
 | | |
 |---|---|
-| **Live Demo** | https://shadowballot-web-lx3j-iota.vercel.app |
+| **Live Demo** | https://GhostVote-web-lx3j-iota.vercel.app |
 | **Deployed Contract Address** | `240c09da2cb5a03df2154c2ecf873331480f367789842d886c7c739f0eaf5d3f` |
 | **Network** | Midnight Preview / Preprod |
-| **CI** | [GitHub Actions](https://github.com/Anuoluwapo25/shadowballot/actions/workflows/ci.yml) — lint, build, 31 tests, web build on every push |
+| **CI** | [GitHub Actions](https://github.com/Anuoluwapo25/GhostVote/actions/workflows/ci.yml) — lint, build, 31 tests, web build on every push |
 
 > To pre-fill the canonical poll address, set `VITE_CONTRACT_ADDRESS=<address>`
 > in the Vercel project settings and redeploy. The frontend reads it via
@@ -56,7 +56,7 @@ usual "private" option is just *"trust the person holding the spreadsheet."*
 
 ### The solution
 
-ShadowBallot removes the trusted party. Each voter holds a 32-byte secret key
+GhostVote removes the trusted party. Each voter holds a 32-byte secret key
 that never leaves their browser. To vote, they produce a zero-knowledge proof
 that publishes only a **nullifier** — a one-way hash of that key — alongside
 their choice. The contract:
@@ -134,7 +134,7 @@ turn `0x8f3a…` into a person.
 
 Being straight about the boundary matters more than claiming a perfect one:
 
-- **Per-ballot choices are public, by design.** ShadowBallot anonymizes *who*,
+- **Per-ballot choices are public, by design.** GhostVote anonymizes *who*,
   not *what*. If an observer learns by any other means that you voted at 14:32,
   the chain tells them how. A scheme that hides individual choices until a
   reveal phase (committed tallies, homomorphic counting) is a different and
@@ -251,15 +251,15 @@ below implying that case was handled. Fixed in
 ### Running individually
 
 ```bash
-npm run test -w @shadowballot/voting-contract   # 7 contract tests
-npm run test -w @shadowballot/web               # 24 application tests
+npm run test -w @GhostVote/voting-contract   # 7 contract tests
+npm run test -w @GhostVote/web               # 24 application tests
 ```
 
 ---
 
 ## ⚙️ CI/CD
 
-[![CI](https://github.com/Anuoluwapo25/shadowballot/actions/workflows/ci.yml/badge.svg)](https://github.com/Anuoluwapo25/shadowballot/actions/workflows/ci.yml)
+[![CI](https://github.com/Anuoluwapo25/GhostVote/actions/workflows/ci.yml/badge.svg)](https://github.com/Anuoluwapo25/GhostVote/actions/workflows/ci.yml)
 
 [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on **every push and
 pull request on every branch**:
@@ -267,11 +267,11 @@ pull request on every branch**:
 | Step | Command |
 |---|---|
 | Install (lockfile-exact) | `npm ci` |
-| Lint contract package | `npm run lint -w @shadowballot/voting-contract` |
-| Build contract bindings | `npm run build -w @shadowballot/voting-contract` |
-| Contract tests | `npm run test -w @shadowballot/voting-contract` |
+| Lint contract package | `npm run lint -w @GhostVote/voting-contract` |
+| Build contract bindings | `npm run build -w @GhostVote/voting-contract` |
+| Contract tests | `npm run test -w @GhostVote/voting-contract` |
 | Type-check web app | `npx tsc -p web/tsconfig.json --noEmit` |
-| Application tests | `npm run test -w @shadowballot/web` |
+| Application tests | `npm run test -w @GhostVote/web` |
 | Production web build | `npm run build:web` |
 | Upload JUnit reports | always, including on failure |
 
@@ -283,7 +283,7 @@ Notes on the design:
 - **No Compact toolchain needed** — the generated `managed/` circuits and
   proving keys are committed deliberately (see the note at the bottom of
   [`.gitignore`](.gitignore)), so CI compiles and tests without installing the
-  compiler. Recompiling is a local step: `npm run compact -w @shadowballot/voting-contract`.
+  compiler. Recompiling is a local step: `npm run compact -w @GhostVote/voting-contract`.
 - **Reports uploaded with `if: always()`** — a red run still shows which cases broke.
 
 **CD:** the web app deploys to Vercel from `main` ([`vercel.json`](vercel.json)),
@@ -411,7 +411,7 @@ contract suite runs the compiled circuits directly.
 ### 3. (Optional) Recompile the contract → ZK circuits
 
 ```bash
-npm run compact -w @shadowballot/voting-contract
+npm run compact -w @GhostVote/voting-contract
 ```
 
 Generates `managed/voting/` — `compiler/contract-info.json`, TypeScript
@@ -421,7 +421,7 @@ committed, so this is only needed after editing `voting.compact`.
 ### 4. Run the browser dApp
 
 ```bash
-npm run dev -w @shadowballot/web
+npm run dev -w @GhostVote/web
 ```
 
 Opens at `http://localhost:5173`. With the [Lace wallet](https://www.lace.io/)
@@ -436,7 +436,7 @@ extension set to **Preprod**:
 ### 5. (Optional) Deploy your own poll from the CLI
 
 ```bash
-npm run deploy-preprod -w @shadowballot/voting-cli
+npm run deploy-preprod -w @GhostVote/voting-cli
 ```
 
 The script loads or generates a wallet seed, prints an unshielded address to
@@ -456,7 +456,7 @@ Then set `VITE_CONTRACT_ADDRESS=<your address>` in the Vercel project settings.
 - [x] **Idea from the provided list** — Private Voting (proposal above)
 - [x] **Minimum 10 meaningful commits** — see `git log`
 - [x] **Complete README** with privacy model and product proposal
-- [x] **Live demo link** — https://shadowballot-web-lx3j-iota.vercel.app
+- [x] **Live demo link** — https://GhostVote-web-lx3j-iota.vercel.app
 - [x] **Deployed contract** — `240c09da2cb5a03df2154c2ecf873331480f367789842d886c7c739f0eaf5d3f`
 
 ---
