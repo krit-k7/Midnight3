@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 //
-// GhostVote DApp shell.
+// ShadowBallot DApp shell.
 //
 // Flow: connect Lace -> join (or deploy) a poll -> cast a ballot -> watch the
 // public tally move. The privacy panel makes the central claim observable: the
@@ -115,7 +115,7 @@ export const App = () => {
     <div className="wrap">
       <header className="masthead">
         <div>
-          <h1>🌒 GhostVote</h1>
+          <h1>🌒 ShadowBallot</h1>
         </div>
         <WalletBar wallet={wallet} />
       </header>
