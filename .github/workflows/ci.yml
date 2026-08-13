@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+# A newer push to the same branch supersedes an in-flight run.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Build & test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      # `npm ci` rather than `npm install`: installs exactly the lockfile, and
+      # fails loudly if package.json and package-lock.json have drifted apart.
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint contract package
+        run: npm run lint -w @shadowballot/voting-contract
+
+      # Compiles the Compact contract's TypeScript bindings. The generated
+      # `managed/` circuits and proving keys are committed, so CI does not need
+      # the Compact toolchain installed to run the suites below.
+      - name: Build contract package
+        run: npm run build -w @shadowballot/voting-contract
+
+      - name: Run contract tests
+        run: npm run test -w @shadowballot/voting-contract
+
+      - name: Type-check web app
+        run: npx tsc -p web/tsconfig.json --noEmit
+
+      - name: Run web application tests
+        run: npm run test -w @shadowballot/web
+
+      - name: Build web app
+        run: npm run build:web
+
+      # Kept even when a suite fails, so a red run still shows which cases broke.
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            contract/reports/*.xml
+            web/reports/*.xml
+          if-no-files-found: warn

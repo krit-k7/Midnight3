@@ -1,0 +1,54 @@
+// SPDX-License-Identifier: Apache-2.0
+//
+// Anonymous voting contract for the Midnight "New Moon" challenge.
+//
+// Public ledger state (visible on-chain to everyone):
+//   - yesVotes / noVotes : running tallies for a single yes/no proposal.
+//   - nullifiers         : the set of spent nullifiers, used to stop
+//                          double-voting without revealing who voted.
+//
+// Private witness (never leaves the voter's machine):
+//   - voterSecretKey()   : the voter's secret identity key.
+//
+// The only things we deliberately make public via disclose():
+//   - the nullifier derived from the secret key (an unlinkable one-way
+//     hash, so it proves "this voter has not voted yet" without exposing
+//     the key itself), and
+//   - the chosen option (which must be public for the tally to mean
+//     anything), but it is never linked to the secret key on-chain.
+
+pragma language_version >= 0.20;
+
+import CompactStandardLibrary;
+
+// ── Public state ────────────────────────────────────────────────────────────
+export ledger yesVotes: Counter;
+export ledger noVotes: Counter;
+export ledger nullifiers: Set<Bytes<32>>;
+
+// ── Private witness ───────────────────────────────────────────────────────────
+// Supplied by the TypeScript driver; has no body here. Its result is private
+// and must be treated as untrusted input.
+witness voterSecretKey(): Bytes<32>;
+
+// ── Transition ────────────────────────────────────────────────────────────────
+// Cast a single vote. `choice == true` means "yes", `false` means "no".
+export circuit vote(choice: Boolean): [] {
+  const sk = voterSecretKey();
+
+  // Derive a nullifier from the secret key. persistentHash is one-way, so the
+  // published nullifier reveals nothing about the key, but is stable per voter
+  // so a second vote with the same key is rejected below.
+  const nullifier = disclose(persistentHash<Bytes<32>>(sk));
+
+  assert(!nullifiers.member(nullifier), "voter has already cast a vote");
+  nullifiers.insert(nullifier);
+
+  // The choice becomes public state (it is the tally), but it is not linked to
+  // the secret key on-chain.
+  if (disclose(choice)) {
+    yesVotes.increment(1);
+  } else {
+    noVotes.increment(1);
+  }
+}

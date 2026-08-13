@@ -1,0 +1,19 @@
+{
+  "name": "@shadowballot/voting-cli",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "rm -rf dist && tsc --project tsconfig.build.json",
+    "lint": "eslint src",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "preprod": "node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm src/preprod.ts",
+    "preprod-ps": "docker compose -f proof-server.yml pull && node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm src/preprod-start-proof-server.ts",
+    "deploy-preprod": "node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm src/deploy-preprod.ts",
+    "deploy-preview": "node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm src/deploy-preview.ts"
+  },
+  "dependencies": {
+    "@shadowballot/voting-contract": "*"
+  }
+}

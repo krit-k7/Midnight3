@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "file": "index.js",
+  "sourceRoot": "../../../../",
+  "sources": ["src/voting.compact", "compiler/standard-library.compact"],
+  "names": [],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;EAmBA;;;;;;;;;;;;;MAgBA,AAAA,IAkBC;;;;;cAlBmB,QAAe;;;;;;;;;;;;;;;;;;yCAAf,QAAe;;;;;;;iEAAf,QAAe;;;OAkBlC;;;;GACA;EAnCD;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;IAKA;;;;;;;;;yEAAgC;IAChC;;;;;;;;;yEAA+B;IAC/B;;;;;;;;;;yEAAyC;;;;;;;GA4BxC;ECtDD,AAAA,kBAAA;oEAAA;;;ED+BA,AAAA,iBAAoC;;0DAApC,cAAoC;;;;;;;;;;;;;;GAAA;EAIpC,AAAA,OAkBC,4BAlBmB,QAAe;UAC3B,IAAqB;UAKrB,WAAmD,0BAAJ,IAAE;qDAE/C;;;;;;;;;;;4KAAkB,WAAS;;;;0HAAjB;;IAClB;;;;;;;;;;2HAAkB,WAAS;;;;;wEAAjB;QAIG,QAAM;YACjB,KAAQ;MAAR;;;;;;;;;;+FAAA,KAAQ;;;;0EAAA;;YAER,KAAO;MAAP;;;;;;;;;;+FAAA,KAAO;;;;0EAAA;;;GAEV;;;;;;;;;;;;;;;;IA7BD;qCAAA;;;;;;;;;;;0GAAgC;KAAA;IAChC;qCAAA;;;;;;;;;;;0GAA+B;KAAA;IAC/B;;;;;uCAAA;;;;;;;;;;;;;;;;4GAAyC;;;;;;uCAAzC;;;;;;;;;;;;4GAAyC;;;;;;;;;;;;;;uCAAzC;;;;;;;;;;;;;;;4GAAyC;;;;;;;;;KAAA;;;;;;;;;;"
+}
