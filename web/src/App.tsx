@@ -115,7 +115,7 @@ export const App = () => {
     <div className="wrap">
       <header className="masthead">
         <div>
-          <h1>🌒 ShadowBallot</h1>
+          <h1>🌒 GhostVote</h1>
         </div>
         <WalletBar wallet={wallet} />
       </header>
