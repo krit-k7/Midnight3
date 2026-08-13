@@ -31,6 +31,9 @@ anonymous ballots with publicly verifiable tallies.
 > in the Vercel project settings and redeploy. The frontend reads it via
 > `import.meta.env.VITE_CONTRACT_ADDRESS` in [`web/src/config.ts`](web/src/config.ts).
 
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/593035a1-68a6-4915-a63e-06064e60ef9a" />
+
+
 ---
 
 ## 💡 Product proposal — Private Voting
