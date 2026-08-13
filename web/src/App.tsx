@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-//stellar
+//
 // ShadowBallot DApp shell.
 //
 // Flow: connect Lace -> join (or deploy) a poll -> cast a ballot -> watch the
