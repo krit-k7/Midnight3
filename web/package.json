@@ -10,6 +10,7 @@
     "dev": "vite",
     "prebuild": "npm run zk-assets",
     "build": "vite build",
+    "build:web": "npm run build",
     "preview": "vite preview",
     "test": "vitest run",
     "typecheck": "npx tsc -p tsconfig.json --noEmit"
