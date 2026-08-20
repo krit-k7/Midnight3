@@ -43,6 +43,21 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* WebGL shader background — must be fixed + full-viewport + behind
+   everything else. This project has no Tailwind, so the canvas needs a
+   real CSS class rather than utility classNames. */
+.shader-bg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  object-fit: cover;
+  touch-action: none;
+  background: var(--bg);
+  z-index: -2;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
