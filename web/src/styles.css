@@ -1,5 +1,6 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 
+/* Global design tokens: colors, spacing, typography, and shared radii. */
 :root {
   --bg: #050509;
   --bg-grid: #0a0b12;
@@ -27,6 +28,7 @@
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
+/* Apply border-box sizing consistently across all elements. */
 * {
   box-sizing: border-box;
 }
@@ -58,6 +60,7 @@ body {
   z-index: -2;
 }
 
+/* Respect users who prefer reduced motion by minimizing animations and transitions. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
@@ -65,6 +68,7 @@ body {
   }
 }
 
+/* Main page container: centers the application and keeps content within a readable width. */
 .wrap {
   max-width: 920px;
   margin: 0 auto;
@@ -75,6 +79,7 @@ body {
 
 /* ── Eyebrow ────────────────────────────────────────────── */
 
+/* Small status label displayed above the main hero section. */
 .eyebrow {
   display: inline-flex;
   align-items: center;
@@ -90,6 +95,7 @@ body {
   margin-bottom: 22px;
 }
 
+/* Glowing status indicator used inside the eyebrow label. */
 .eyebrow .dot {
   width: 6px;
   height: 6px;
@@ -100,6 +106,7 @@ body {
 
 /* ── Header / Hero ──────────────────────────────────────── */
 
+/* Top header layout containing the app title and wallet controls. */
 .masthead {
   display: flex;
   align-items: flex-start;
@@ -109,6 +116,7 @@ body {
   margin-bottom: 20px;
 }
 
+/* Application title typography and alignment. */
 .masthead h1 {
   font-family: var(--display);
   font-size: 1.5rem;
@@ -120,10 +128,12 @@ body {
   gap: 10px;
 }
 
+/* Adds a subtle glow around the moon icon. */
 .masthead h1 .moon {
   filter: drop-shadow(0 0 10px rgba(140, 109, 255, 0.6));
 }
 
+/* Large hero heading that introduces the main product message. */
 .hero-title {
   font-family: var(--display);
   font-weight: 700;
@@ -133,6 +143,7 @@ body {
   margin: 0 0 18px;
 }
 
+/* Gradient treatment applied to the highlighted part of the hero heading. */
 .hero-title .grad {
   background: var(--grad);
   -webkit-background-clip: text;
@@ -140,6 +151,7 @@ body {
   color: transparent;
 }
 
+/* Supporting description beneath the hero heading. */
 .tagline {
   color: var(--muted);
   margin: 0 0 30px;
@@ -149,6 +161,7 @@ body {
 
 /* ── Cards ──────────────────────────────────────────────── */
 
+/* Reusable content card used for poll, tally, and privacy sections. */
 .card {
   background: linear-gradient(180deg, var(--surface) 0%, rgba(15, 16, 24, 0.6) 100%);
   border: 1px solid var(--border);
@@ -158,6 +171,7 @@ body {
   position: relative;
 }
 
+/* Compact uppercase section heading used inside cards. */
 .card h2 {
   font-family: var(--mono);
   font-size: 0.72rem;
@@ -170,6 +184,7 @@ body {
 
 /* ── Buttons ────────────────────────────────────────────── */
 
+/* Base styling shared by all interactive buttons. */
 button {
   font: inherit;
   font-family: var(--body);
@@ -182,25 +197,30 @@ button {
   transition: filter 0.15s ease, opacity 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
 }
 
+/* Slightly lifts and brightens buttons when they are interactive. */
 button:hover:not(:disabled) {
   filter: brightness(1.2);
   transform: translateY(-1px);
 }
 
+/* Removes the hover lift while a button is being pressed. */
 button:active:not(:disabled) {
   transform: translateY(0);
 }
 
+/* Keyboard-accessible focus indicator for buttons. */
 button:focus-visible {
   outline: 2px solid var(--cyan);
   outline-offset: 2px;
 }
 
+/* Visually indicates buttons that cannot currently be used. */
 button:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
 
+/* Primary action button using the application's violet-to-cyan gradient. */
 button.primary {
   background: var(--grad);
   border-color: transparent;
@@ -209,6 +229,7 @@ button.primary {
   box-shadow: 0 0 0 1px rgba(140, 109, 255, 0.3), 0 8px 24px -8px rgba(140, 109, 255, 0.55);
 }
 
+/* Positive/YES voting action button. */
 button.yes {
   background: var(--yes);
   border-color: transparent;
@@ -217,6 +238,7 @@ button.yes {
   box-shadow: 0 8px 22px -10px rgba(53, 224, 160, 0.6);
 }
 
+/* Negative/NO voting action button. */
 button.no {
   background: var(--no);
   border-color: transparent;
@@ -225,6 +247,7 @@ button.no {
   box-shadow: 0 8px 22px -10px rgba(255, 93, 122, 0.6);
 }
 
+/* Generic horizontal layout utility for controls and inline content. */
 .row {
   display: flex;
   gap: 10px;
@@ -234,6 +257,7 @@ button.no {
 
 /* ── Wallet bar ─────────────────────────────────────────── */
 
+/* Compact rounded container used for wallet connection status. */
 .pill {
   display: inline-flex;
   align-items: center;
@@ -246,6 +270,7 @@ button.no {
   font-family: var(--mono);
 }
 
+/* Default connected-status indicator. */
 .dot {
   width: 8px;
   height: 8px;
@@ -254,11 +279,13 @@ button.no {
   box-shadow: 0 0 8px 1px rgba(53, 224, 160, 0.7);
 }
 
+/* Neutral indicator shown when the wallet is disconnected. */
 .dot.off {
   background: var(--dim);
   box-shadow: none;
 }
 
+/* Keeps the wallet provider icon at a consistent size. */
 .wallet-icon {
   width: 18px;
   height: 18px;
@@ -267,6 +294,7 @@ button.no {
 
 /* ── Tally ──────────────────────────────────────────────── */
 
+/* Three-column layout for YES, NO, and total vote statistics. */
 .tally {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -274,6 +302,7 @@ button.no {
   margin-bottom: 16px;
 }
 
+/* Individual tally statistic card. */
 .stat {
   background: var(--surface-2);
   border: 1px solid var(--border);
@@ -282,6 +311,7 @@ button.no {
   text-align: center;
 }
 
+/* Large numeric value displayed inside a tally statistic. */
 .stat .n {
   font-family: var(--mono);
   font-size: 2rem;
@@ -290,6 +320,7 @@ button.no {
   line-height: 1.1;
 }
 
+/* Small label displayed beneath each tally value. */
 .stat .k {
   font-family: var(--mono);
   font-size: 0.7rem;
@@ -298,16 +329,19 @@ button.no {
   color: var(--dim);
 }
 
+/* YES tally value styling. */
 .stat.yes .n {
   color: var(--yes);
   text-shadow: 0 0 18px rgba(53, 224, 160, 0.35);
 }
 
+/* NO tally value styling. */
 .stat.no .n {
   color: var(--no);
   text-shadow: 0 0 18px rgba(255, 93, 122, 0.35);
 }
 
+/* Vote distribution bar: NO is the base, with YES filling its percentage. */
 .bar {
   height: 10px;
   border-radius: 999px;
@@ -316,6 +350,7 @@ button.no {
   box-shadow: inset 0 0 0 1px var(--border);
 }
 
+/* Animated YES portion of the vote distribution bar. */
 .bar > span {
   display: block;
   height: 100%;
@@ -325,12 +360,14 @@ button.no {
 
 /* ── Privacy panel ──────────────────────────────────────── */
 
+/* Two-column privacy comparison layout on larger screens. */
 .split {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 
+/* Collapse multi-column sections on smaller screens for mobile readability. */
 @media (max-width: 640px) {
   .split,
   .tally {
@@ -338,6 +375,7 @@ button.no {
   }
 }
 
+/* Individual privacy information panel. */
 .lane {
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -345,6 +383,7 @@ button.no {
   background: var(--surface-2);
 }
 
+/* Privacy panel heading layout and typography. */
 .lane h3 {
   margin: 0 0 10px;
   font-family: var(--mono);
@@ -355,22 +394,27 @@ button.no {
   gap: 6px;
 }
 
+/* Styling for information that stays private in the browser. */
 .lane.private {
   border-color: rgba(255, 184, 77, 0.22);
 }
 
+/* Warning-colored heading for private information. */
 .lane.private h3 {
   color: var(--warn);
 }
 
+/* Styling for information written to the public chain. */
 .lane.public {
   border-color: rgba(79, 224, 216, 0.22);
 }
 
+/* Cyan heading for public on-chain information. */
 .lane.public h3 {
   color: var(--cyan);
 }
 
+/* List typography for privacy details. */
 .lane ul {
   margin: 0;
   padding-left: 18px;
@@ -378,6 +422,7 @@ button.no {
   color: var(--muted);
 }
 
+/* Spacing between individual privacy details. */
 .lane li {
   margin-bottom: 6px;
 }
@@ -390,6 +435,7 @@ code,
   color: var(--text);
 }
 
+/* Displays the full active contract address in a readable wrapped container. */
 .addr {
   font-family: var(--mono);
   font-size: 0.78rem;
@@ -401,6 +447,7 @@ code,
   color: var(--muted);
 }
 
+/* Contract-address input styling. */
 input[type='text'] {
   font: inherit;
   font-family: var(--mono);
@@ -414,6 +461,7 @@ input[type='text'] {
   padding: 10px 12px;
 }
 
+/* Accessible focus state for the contract-address input. */
 input[type='text']:focus-visible {
   outline: 2px solid var(--cyan);
   outline-offset: 1px;
@@ -421,6 +469,7 @@ input[type='text']:focus-visible {
 
 /* ── Messages ───────────────────────────────────────────── */
 
+/* Shared notification/message container. */
 .msg {
   border-radius: var(--radius-sm);
   padding: 12px 14px;
@@ -429,29 +478,34 @@ input[type='text']:focus-visible {
   border: 1px solid;
 }
 
+/* Error notification styling. */
 .msg.err {
   background: rgba(255, 93, 122, 0.09);
   border-color: rgba(255, 93, 122, 0.4);
   color: #ffb3bf;
 }
 
+/* Success notification styling. */
 .msg.ok {
   background: rgba(53, 224, 160, 0.09);
   border-color: rgba(53, 224, 160, 0.4);
   color: #8ff5cf;
 }
 
+/* Informational notification styling. */
 .msg.info {
   background: rgba(140, 109, 255, 0.09);
   border-color: rgba(140, 109, 255, 0.4);
   color: #cabfff;
 }
 
+/* Secondary text used for supporting or less prominent information. */
 .muted {
   color: var(--muted);
   font-size: 0.86rem;
 }
 
+/* Link color follows the application's cyan accent. */
 a {
   color: var(--cyan);
 }
@@ -461,6 +515,7 @@ a {
    nullifier commitments, tx confirmations. Not decorative —
    every line is emitted by a real app event.               */
 
+/* Live event terminal container used to show real application activity. */
 .terminal {
   background: #08080d;
   border: 1px solid var(--border-bright);
@@ -469,6 +524,7 @@ a {
   box-shadow: 0 20px 60px -25px rgba(140, 109, 255, 0.35);
 }
 
+/* Terminal header containing the window indicators and environment label. */
 .terminal-bar {
   display: flex;
   align-items: center;
@@ -481,6 +537,7 @@ a {
   color: var(--dim);
 }
 
+/* Shared size and shape for terminal window indicators. */
 .terminal-bar .tl-dot {
   width: 10px;
   height: 10px;
@@ -491,6 +548,7 @@ a {
 .terminal-bar .tl-dot.y { background: #ffb84d; }
 .terminal-bar .tl-dot.g { background: #35e0a0; }
 
+/* Scrollable terminal content area containing live event lines. */
 .terminal-body {
   font-family: var(--mono);
   font-size: 0.82rem;
@@ -503,6 +561,7 @@ a {
   gap: 6px;
 }
 
+/* Individual terminal event row. */
 .terminal-line {
   display: flex;
   gap: 8px;
@@ -510,6 +569,7 @@ a {
   word-break: break-word;
 }
 
+/* Terminal prompt marker styling. */
 .terminal-line .prompt {
   color: var(--violet);
   flex-shrink: 0;
@@ -520,6 +580,7 @@ a {
 .terminal-line.err { color: var(--no); }
 .terminal-line.cmd { color: var(--text); }
 
+/* Blinking cursor shown at the end of the live terminal. */
 .terminal-cursor {
   display: inline-block;
   width: 7px;
@@ -529,10 +590,12 @@ a {
   vertical-align: text-bottom;
 }
 
+/* Cursor blink animation. */
 @keyframes blink {
   50% { opacity: 0; }
 }
 
+/* Small footer note shown beneath the application content. */
 footer {
   margin-top: 34px;
   color: var(--dim);
