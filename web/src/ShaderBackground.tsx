@@ -15,7 +15,6 @@ export const useShaderBackground = () => {
     private vs: WebGLShader | null = null;
     private fs: WebGLShader | null = null;
     private buffer: WebGLBuffer | null = null;
-    private scale: number;
     private shaderSource: string;
     private mouseMove = [0, 0];
     private mouseCoords = [0, 0];
@@ -31,7 +30,6 @@ void main(){gl_Position=position;}`;
 
     constructor(canvas: HTMLCanvasElement, scale: number) {
       this.canvas = canvas;
-      this.scale = scale;
       this.gl = canvas.getContext("webgl2")!;
       this.gl.viewport(0, 0, canvas.width * scale, canvas.height * scale);
       this.shaderSource = ghostVoteShaderSource;
@@ -50,7 +48,6 @@ void main(){gl_Position=position;}`;
     updatePointerCount(nbr: number) { this.nbrOfPointers = nbr; }
 
     updateScale(scale: number) {
-      this.scale = scale;
       this.gl.viewport(0, 0, this.canvas.width * scale, this.canvas.height * scale);
     }
 
