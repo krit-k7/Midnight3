@@ -31,14 +31,12 @@
   box-sizing: border-box;
 }
 
+/* The animated WebGL shader (ShaderBackground, fixed + z-index:-2) now supplies
+   the violet/cyan glow and motion, so body just needs the flat void colour
+   underneath it — no more static radial-gradient/grid layers competing with it. */
 body {
   margin: 0;
-  background:
-    radial-gradient(1200px 600px at 15% -10%, rgba(140, 109, 255, 0.16), transparent 60%),
-    radial-gradient(900px 500px at 110% 10%, rgba(79, 224, 216, 0.10), transparent 55%),
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.025) 0px, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 42px),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0px, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 42px),
-    var(--bg);
+  background: var(--bg);
   color: var(--text);
   font-family: var(--body);
   line-height: 1.55;
@@ -56,6 +54,8 @@ body {
   max-width: 920px;
   margin: 0 auto;
   padding: 40px 20px 90px;
+  position: relative;
+  z-index: 1;
 }
 
 /* ── Eyebrow ────────────────────────────────────────────── */
