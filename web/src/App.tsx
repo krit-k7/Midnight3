@@ -9,6 +9,7 @@
 // The terminal panel makes it audible/visible in real time, as each step
 // actually happens — it is a live log, not a decorative prop.
 
+// React hooks used for memoized callbacks, lifecycle effects, DOM references, and component state.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useWallet } from './hooks/useWallet';
 import { castVote, deployPoll, joinPoll, readTally } from './midnight/voting';
@@ -20,6 +21,7 @@ type Busy = null | 'joining' | 'deploying' | 'voting';
 type LogKind = 'cmd' | 'muted' | 'ok' | 'warn' | 'err';
 type LogLine = { id: number; kind: LogKind; text: string };
 
+// Shortens long addresses/transaction IDs so they remain readable in the UI.
 const short = (s: string, head = 10, tail = 8) =>
   s.length <= head + tail + 1 ? s : `${s.slice(0, head)}…${s.slice(-tail)}`;
 
@@ -163,6 +165,7 @@ export const App = () => {
             Powered by Midnight Network · Zero-Knowledge Proofs
           </div>
 
+          {/* Header: application identity on the left and wallet controls on the right. */}
           <header className="masthead">
             <div>
               <h1>
@@ -327,6 +330,7 @@ export const App = () => {
 };
 
 /** Connect / disconnect control plus a summary of the live session. */
+// Displays the current wallet session or the appropriate connect/install action.
 const WalletBar = ({ wallet }: { wallet: ReturnType<typeof useWallet> }) => {
   const { status, info, error, available, connect, disconnect } = wallet;
 
