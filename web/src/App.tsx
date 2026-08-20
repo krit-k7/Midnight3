@@ -156,30 +156,37 @@ export const App = () => {
     <>
       <ShaderBackground />
       <div className="wrap">
-        <div className="eyebrow">
-          <span className="dot" />
-          Powered by Midnight Network · Zero-Knowledge Proofs
-        </div>
+        <div className="hero">
+          <span className="floating-badge fb-1" aria-hidden="true">🔒 Private</span>
+          <span className="floating-badge fb-2" aria-hidden="true">🗳️ Anonymous</span>
+          <span className="floating-badge fb-3" aria-hidden="true">⚡ ZK Proof</span>
+          <span className="floating-badge fb-4" aria-hidden="true">✅ Verifiable</span>
 
-        <header className="masthead">
-          <div>
-            <h1>
-              <span className="moon">🌒</span> GhostVote
-            </h1>
+          <div className="eyebrow">
+            <span className="dot" />
+            Powered by Midnight Network · Zero-Knowledge Proofs
           </div>
-          <WalletBar wallet={wallet} />
-        </header>
 
-        <h2 className="hero-title">
-          Vote in the dark.
-          <br />
-          <span className="grad">Count in the light.</span>
-        </h2>
-        <p className="tagline">
-          Anonymous voting on Midnight Preprod. The tally is public and auditable; the voter is
-          not. Double-voting is blocked by a zero-knowledge proof, not by a server that knows
-          who you are.
-        </p>
+          <header className="masthead">
+            <div>
+              <h1>
+                <span className="moon">🌒</span> GhostVote
+              </h1>
+            </div>
+            <WalletBar wallet={wallet} />
+          </header>
+
+          <h2 className="hero-title">
+            Vote in the dark.
+            <br />
+            <span className="grad">Count in the light.</span>
+          </h2>
+          <p className="tagline">
+            Anonymous voting on Midnight Preprod. The tally is public and auditable; the voter is
+            not. Double-voting is blocked by a zero-knowledge proof, not by a server that knows
+            who you are.
+          </p>
+        </div>
 
         {/* ── Live proof terminal ──────────────────────────── */}
         <div className="terminal" style={{ marginBottom: 18 }}>
@@ -329,8 +336,8 @@ const WalletBar = ({ wallet }: { wallet: ReturnType<typeof useWallet> }) => {
 
   if (status === 'connected' && info) {
     return (
-      <div style={{ textAlign: 'right' }}>
-        <div className="row" style={{ justifyContent: 'flex-end' }}>
+      <div style={{ textAlign: 'center' }}>
+        <div className="row" style={{ justifyContent: 'center' }}>
           <span className="pill">
             <span className="dot" />
             {info.icon && <img className="wallet-icon" src={info.icon} alt="" />}
@@ -348,8 +355,8 @@ const WalletBar = ({ wallet }: { wallet: ReturnType<typeof useWallet> }) => {
   const noWallet = available.length === 0;
 
   return (
-    <div style={{ textAlign: 'right' }}>
-      <div className="row" style={{ justifyContent: 'flex-end' }}>
+    <div style={{ textAlign: 'center' }}>
+      <div className="row" style={{ justifyContent: 'center' }}>
         <span className="pill">
           <span className="dot off" />
           Not connected
