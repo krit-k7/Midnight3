@@ -34,14 +34,8 @@
 /* The animated WebGL shader (ShaderBackground, fixed + z-index:-2) now supplies
    the violet/cyan glow and motion, so body just needs the flat void colour
    underneath it — no more static radial-gradient/grid layers competing with it. */
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   margin: 0;
-  min-height: 100vh;
-  overflow-x: hidden;
   background: var(--bg);
   color: var(--text);
   font-family: var(--body);
@@ -79,78 +73,6 @@ body {
   z-index: 1;
 }
 
-/* ── Hero (centered) ────────────────────────────────────── */
-
-.hero {
-  position: relative;
-  text-align: center;
-  padding: 8px 0 40px;
-}
-
-/* ── Floating decorative badges ─────────────────────────── */
-
-.floating-badge {
-  position: absolute;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: rgba(23, 24, 38, 0.55);
-  border: 1px solid var(--border-bright);
-  backdrop-filter: blur(6px);
-  font-family: var(--mono);
-  font-size: 0.74rem;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-  pointer-events: none;
-  z-index: 0;
-  animation: floaty 6.5s ease-in-out infinite;
-}
-
-.fb-1 {
-  top: -4px;
-  left: 4%;
-  color: var(--violet);
-  border-color: rgba(140, 109, 255, 0.35);
-  animation-delay: 0s;
-}
-
-.fb-2 {
-  top: 34px;
-  right: 2%;
-  color: var(--cyan);
-  border-color: rgba(79, 224, 216, 0.35);
-  animation-delay: 1.4s;
-}
-
-.fb-3 {
-  bottom: 46px;
-  left: 1%;
-  color: var(--yes);
-  border-color: rgba(53, 224, 160, 0.3);
-  animation-delay: 2.8s;
-}
-
-.fb-4 {
-  bottom: 8px;
-  right: 5%;
-  color: var(--warn);
-  border-color: rgba(255, 184, 77, 0.3);
-  animation-delay: 4.2s;
-}
-
-@keyframes floaty {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-14px) rotate(1.5deg); }
-}
-
-@media (max-width: 780px) {
-  .floating-badge {
-    display: none;
-  }
-}
-
 /* ── Eyebrow ────────────────────────────────────────────── */
 
 .eyebrow {
@@ -180,11 +102,11 @@ body {
 
 .masthead {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: 16px;
-  margin-bottom: 28px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
 }
 
 .masthead h1 {
@@ -209,7 +131,6 @@ body {
   line-height: 1.06;
   letter-spacing: -0.02em;
   margin: 0 0 18px;
-  text-align: center;
 }
 
 .hero-title .grad {
@@ -221,10 +142,9 @@ body {
 
 .tagline {
   color: var(--muted);
-  margin: 0 auto 30px;
+  margin: 0 0 30px;
   max-width: 58ch;
   font-size: 1.02rem;
-  text-align: center;
 }
 
 /* ── Cards ──────────────────────────────────────────────── */
