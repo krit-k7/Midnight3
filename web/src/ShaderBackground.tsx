@@ -229,14 +229,10 @@ void main(){gl_Position=position;}`;
 
 export const ShaderBackground = () => {
   const canvasRef = useShaderBackground();
-  return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 w-screen h-screen object-cover touch-none"
-      style={{ background: "#050509", zIndex: -2 }}
-      aria-hidden="true"
-    />
-  );
+  // Plain CSS class (see .shader-bg in styles.css) — this project has no
+  // Tailwind, so utility classes like "fixed inset-0 w-screen h-screen"
+  // silently do nothing and the canvas renders inline at its pixel size.
+  return <canvas ref={canvasRef} className="shader-bg" aria-hidden="true" />;
 };
 
 // Recolored to GhostVote's violet/cyan palette (#8c6dff -> #4fe0d8) on the
