@@ -14,6 +14,7 @@ import { useWallet } from './hooks/useWallet';
 import { castVote, deployPoll, joinPoll, readTally } from './midnight/voting';
 import type { DeployedVotingContract, VotingTally } from './midnight/contract-types';
 import { DEFAULT_CONTRACT_ADDRESS } from './config';
+import { ShaderBackground } from './ShaderBackground';
 
 type Busy = null | 'joining' | 'deploying' | 'voting';
 type LogKind = 'cmd' | 'muted' | 'ok' | 'warn' | 'err';
@@ -152,170 +153,173 @@ export const App = () => {
   const yesPct = total === 0 ? 50 : (yes / total) * 100;
 
   return (
-    <div className="wrap">
-      <div className="eyebrow">
-        <span className="dot" />
-        Powered by Midnight Network · Zero-Knowledge Proofs
-      </div>
-
-      <header className="masthead">
-        <div>
-          <h1>
-            <span className="moon">🌒</span> GhostVote
-          </h1>
+    <>
+      <ShaderBackground />
+      <div className="wrap">
+        <div className="eyebrow">
+          <span className="dot" />
+          Powered by Midnight Network · Zero-Knowledge Proofs
         </div>
-        <WalletBar wallet={wallet} />
-      </header>
 
-      <h2 className="hero-title">
-        Vote in the dark.
-        <br />
-        <span className="grad">Count in the light.</span>
-      </h2>
-      <p className="tagline">
-        Anonymous voting on Midnight Preprod. The tally is public and auditable; the voter is
-        not. Double-voting is blocked by a zero-knowledge proof, not by a server that knows
-        who you are.
-      </p>
-
-      {/* ── Live proof terminal ──────────────────────────── */}
-      <div className="terminal" style={{ marginBottom: 18 }}>
-        <div className="terminal-bar">
-          <span className="tl-dot r" />
-          <span className="tl-dot y" />
-          <span className="tl-dot g" />
-          <span style={{ marginLeft: 6 }}>ghostvote · midnight-preprod</span>
-        </div>
-        <div className="terminal-body" ref={logBody}>
-          {log.map((line) => (
-            <div key={line.id} className={`terminal-line ${line.kind}`}>
-              {line.kind === 'cmd' ? <span className="prompt">$</span> : <span className="prompt">›</span>}
-              <span>{line.text}</span>
-            </div>
-          ))}
-          <div className="terminal-line">
-            <span className="prompt">$</span>
-            <span className="terminal-cursor" />
+        <header className="masthead">
+          <div>
+            <h1>
+              <span className="moon">🌒</span> GhostVote
+            </h1>
           </div>
-        </div>
-      </div>
+          <WalletBar wallet={wallet} />
+        </header>
 
-      {/* ── Poll ─────────────────────────────────────────── */}
-      <section className="card">
-        <h2>Poll</h2>
-        {!connected ? (
-          <p className="muted">Connect Lace to join a poll and cast a ballot.</p>
-        ) : (
-          <>
-            <div className="row" style={{ marginBottom: 12 }}>
-              <input
-                type="text"
-                value={address}
-                spellCheck={false}
-                placeholder="Contract address (0x…)"
-                onChange={(e) => setAddress(e.target.value)}
-                disabled={busy !== null}
-              />
-              <button onClick={handleJoin} disabled={busy !== null || !address.trim()}>
-                {busy === 'joining' ? 'Joining…' : 'Join'}
-              </button>
-              <button className="primary" onClick={handleDeploy} disabled={busy !== null}>
-                {busy === 'deploying' ? 'Deploying…' : 'Deploy new'}
-              </button>
-            </div>
-            {activeAddress && (
-              <div className="addr" title={activeAddress}>
-                {activeAddress}
+        <h2 className="hero-title">
+          Vote in the dark.
+          <br />
+          <span className="grad">Count in the light.</span>
+        </h2>
+        <p className="tagline">
+          Anonymous voting on Midnight Preprod. The tally is public and auditable; the voter is
+          not. Double-voting is blocked by a zero-knowledge proof, not by a server that knows
+          who you are.
+        </p>
+
+        {/* ── Live proof terminal ──────────────────────────── */}
+        <div className="terminal" style={{ marginBottom: 18 }}>
+          <div className="terminal-bar">
+            <span className="tl-dot r" />
+            <span className="tl-dot y" />
+            <span className="tl-dot g" />
+            <span style={{ marginLeft: 6 }}>ghostvote · midnight-preprod</span>
+          </div>
+          <div className="terminal-body" ref={logBody}>
+            {log.map((line) => (
+              <div key={line.id} className={`terminal-line ${line.kind}`}>
+                {line.kind === 'cmd' ? <span className="prompt">$</span> : <span className="prompt">›</span>}
+                <span>{line.text}</span>
               </div>
-            )}
-          </>
-        )}
-      </section>
+            ))}
+            <div className="terminal-line">
+              <span className="prompt">$</span>
+              <span className="terminal-cursor" />
+            </div>
+          </div>
+        </div>
 
-      {/* ── Tally + ballot ───────────────────────────────── */}
-      {contract && (
+        {/* ── Poll ─────────────────────────────────────────── */}
         <section className="card">
-          <h2>Live public tally</h2>
-          <div className="tally">
-            <div className="stat yes">
-              <div className="n">{yes}</div>
-              <div className="k">Yes</div>
-            </div>
-            <div className="stat no">
-              <div className="n">{no}</div>
-              <div className="k">No</div>
-            </div>
-            <div className="stat">
-              <div className="n">{total}</div>
-              <div className="k">Total</div>
-            </div>
-          </div>
-          <div className="bar">
-            <span style={{ width: `${yesPct}%` }} />
-          </div>
-
-          <div className="row" style={{ marginTop: 16 }}>
-            <button className="yes" onClick={() => handleVote(true)} disabled={busy !== null}>
-              {busy === 'voting' ? 'Proving…' : 'Vote YES'}
-            </button>
-            <button className="no" onClick={() => handleVote(false)} disabled={busy !== null}>
-              {busy === 'voting' ? 'Proving…' : 'Vote NO'}
-            </button>
-            <button onClick={() => void refreshTally()} disabled={busy !== null}>
-              Refresh
-            </button>
-          </div>
-          <p className="muted" style={{ marginTop: 10, marginBottom: 0 }}>
-            Voting builds a ZK proof inside Lace. Try voting twice with the same key — the
-            second attempt is rejected on-chain.
-          </p>
+          <h2>Poll</h2>
+          {!connected ? (
+            <p className="muted">Connect Lace to join a poll and cast a ballot.</p>
+          ) : (
+            <>
+              <div className="row" style={{ marginBottom: 12 }}>
+                <input
+                  type="text"
+                  value={address}
+                  spellCheck={false}
+                  placeholder="Contract address (0x…)"
+                  onChange={(e) => setAddress(e.target.value)}
+                  disabled={busy !== null}
+                />
+                <button onClick={handleJoin} disabled={busy !== null || !address.trim()}>
+                  {busy === 'joining' ? 'Joining…' : 'Join'}
+                </button>
+                <button className="primary" onClick={handleDeploy} disabled={busy !== null}>
+                  {busy === 'deploying' ? 'Deploying…' : 'Deploy new'}
+                </button>
+              </div>
+              {activeAddress && (
+                <div className="addr" title={activeAddress}>
+                  {activeAddress}
+                </div>
+              )}
+            </>
+          )}
         </section>
-      )}
 
-      {error && <div className="msg err">{error}</div>}
-      {notice && <div className="msg ok">{notice}</div>}
+        {/* ── Tally + ballot ───────────────────────────────── */}
+        {contract && (
+          <section className="card">
+            <h2>Live public tally</h2>
+            <div className="tally">
+              <div className="stat yes">
+                <div className="n">{yes}</div>
+                <div className="k">Yes</div>
+              </div>
+              <div className="stat no">
+                <div className="n">{no}</div>
+                <div className="k">No</div>
+              </div>
+              <div className="stat">
+                <div className="n">{total}</div>
+                <div className="k">Total</div>
+              </div>
+            </div>
+            <div className="bar">
+              <span style={{ width: `${yesPct}%` }} />
+            </div>
 
-      {/* ── Privacy claim ────────────────────────────────── */}
-      <section className="card">
-        <h2>What is proven vs. what is shown</h2>
-        <div className="split">
-          <div className="lane private">
-            <h3>🔒 Stays in this browser</h3>
-            <ul>
-              <li>
-                Your 32-byte <code>voterSecretKey</code> — the private witness, held in local
-                private state
-              </li>
-              <li>The link between your wallet and your ballot</li>
-              <li>Which way any individual voted</li>
-            </ul>
+            <div className="row" style={{ marginTop: 16 }}>
+              <button className="yes" onClick={() => handleVote(true)} disabled={busy !== null}>
+                {busy === 'voting' ? 'Proving…' : 'Vote YES'}
+              </button>
+              <button className="no" onClick={() => handleVote(false)} disabled={busy !== null}>
+                {busy === 'voting' ? 'Proving…' : 'Vote NO'}
+              </button>
+              <button onClick={() => void refreshTally()} disabled={busy !== null}>
+                Refresh
+              </button>
+            </div>
+            <p className="muted" style={{ marginTop: 10, marginBottom: 0 }}>
+              Voting builds a ZK proof inside Lace. Try voting twice with the same key — the
+              second attempt is rejected on-chain.
+            </p>
+          </section>
+        )}
+
+        {error && <div className="msg err">{error}</div>}
+        {notice && <div className="msg ok">{notice}</div>}
+
+        {/* ── Privacy claim ────────────────────────────────── */}
+        <section className="card">
+          <h2>What is proven vs. what is shown</h2>
+          <div className="split">
+            <div className="lane private">
+              <h3>🔒 Stays in this browser</h3>
+              <ul>
+                <li>
+                  Your 32-byte <code>voterSecretKey</code> — the private witness, held in local
+                  private state
+                </li>
+                <li>The link between your wallet and your ballot</li>
+                <li>Which way any individual voted</li>
+              </ul>
+            </div>
+            <div className="lane public">
+              <h3>🌐 Written on-chain</h3>
+              <ul>
+                <li>
+                  <code>yesVotes</code> / <code>noVotes</code> — the auditable tally
+                </li>
+                <li>
+                  A one-way <code>nullifier = persistentHash(sk)</code>, unlinkable to your key
+                </li>
+                <li>Nothing that identifies the voter</li>
+              </ul>
+            </div>
           </div>
-          <div className="lane public">
-            <h3>🌐 Written on-chain</h3>
-            <ul>
-              <li>
-                <code>yesVotes</code> / <code>noVotes</code> — the auditable tally
-              </li>
-              <li>
-                A one-way <code>nullifier = persistentHash(sk)</code>, unlinkable to your key
-              </li>
-              <li>Nothing that identifies the voter</li>
-            </ul>
+          <div className="msg info">
+            <strong>The observable behaviour:</strong> casting a ballot moves the public tally,
+            yet the chain records no address, no signature over your choice, and no way to tie
+            the two together. Voting a second time from the same key fails the contract's
+            <code> assert(!nullifiers.member(nullifier)) </code> check — proving the voter is
+            unique <em>without</em> proving who they are.
           </div>
-        </div>
-        <div className="msg info">
-          <strong>The observable behaviour:</strong> casting a ballot moves the public tally,
-          yet the chain records no address, no signature over your choice, and no way to tie
-          the two together. Voting a second time from the same key fails the contract's
-          <code> assert(!nullifiers.member(nullifier)) </code> check — proving the voter is
-          unique <em>without</em> proving who they are.
-        </div>
-      </section>
+        </section>
 
-      <footer>
-        Midnight Preprod · circuits compiled with Compact · proving delegated to your wallet
-      </footer>
-    </div>
+        <footer>
+          Midnight Preprod · circuits compiled with Compact · proving delegated to your wallet
+        </footer>
+      </div>
+    </>
   );
 };
 
