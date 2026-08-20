@@ -157,10 +157,6 @@ export const App = () => {
       <ShaderBackground />
       <div className="wrap">
         <div className="hero">
-          <span className="floating-badge fb-1" aria-hidden="true">🔒 Private</span>
-          <span className="floating-badge fb-2" aria-hidden="true">🗳️ Anonymous</span>
-          <span className="floating-badge fb-3" aria-hidden="true">⚡ ZK Proof</span>
-          <span className="floating-badge fb-4" aria-hidden="true">✅ Verifiable</span>
 
           <div className="eyebrow">
             <span className="dot" />
